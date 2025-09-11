@@ -40,7 +40,7 @@ class Rayon(models.Model):
 class Contenir(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE, related_name="contenir_produit")
     rayon = models.ForeignKey(Rayon, on_delete=models.CASCADE, related_name="contenir_rayon")
-    Qte = models.PositiveIntegerField()
+    Qte = models.PositiveIntegerField(default = 0)
 
     class Meta:
         unique_together = ('produit', 'rayon')  # Un produit dans un rayon spécifique est unique

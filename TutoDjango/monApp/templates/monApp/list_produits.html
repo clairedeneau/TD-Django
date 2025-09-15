@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>Mon app DJANGO</title>
+</head>
+    <body>
+        <h1>Hello mes produits !</h1>
+        <!-- TODO : liste des produits -->
+        <p>
+            Mes produits sont :
+            {% for prdt in prdts %}
+                <li>{{ prdt.intituleProd }}</li>
+            {% endfor %}
+        </p>
+        <p>J'ai {{ prdts|length }} produits préférés.</p>
+        <p>
+            J'ai
+            {% if prdts|length < 5 %}
+            peu de
+            {% elif prdts|length < 10 %}
+            quelques
+            {% else %}
+            beaucoup de
+            {% endif %}
+            produits préférés.
+        </p>
+    </body>
+</html>

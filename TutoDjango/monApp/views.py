@@ -1,42 +1,32 @@
 from django.shortcuts import render
 from .models import *
+from django.http import HttpResponse, Http404
 
 # Create your views here.
-from django.http import HttpResponse
-def home(request, param = None):
- if param :
-    return HttpResponse(f"<h1>Bonjour {param} !</h1>")
- return HttpResponse("<h1>Hello Django!</h1>")
+
+def home(request, param):
+    if request.GET and request.GET["test"]:
+        raise Http404
+    return HttpResponse("<h1>Hello " + param + " ! You're connected</h1>")
 
 def contact(request):
- return HttpResponse("<h1>Contact us</h1>\n<p> Ou pas</p>")
+    return render(request, 'monApp/contact.html')
 
 def about(request):
- return HttpResponse("<h1>About...</h1>")
+    return render(request, 'monApp/about.html')
 
 def liste_produits(request):
     prdts = Produit.objects.all()
-    rep = "<ul>"
-    for prod in prdts:
-        rep += f"<li><h2>{prod.intituleProd}<h2>"
-        rep += f"<ul><li>Catégorie: {prod.categorie or "Aucune"}</li></ul></li>"
-    rep += "</ul>"
-    return HttpResponse(rep)
+    return render(request, 'monApp/list_produits.html', {'prdts': prdts})
 
 def liste_categories(request):
     cats = Categorie.objects.all()
-    rep = "<ul>"
-    for cat in cats:
-        rep += f"<li><h2>{cat.nomCat or "Untitled"}<h2>"
-        rep += f"<ul><li>Identifiant: {cat.idCat}</li></ul></li>"
-    rep += "</ul>"
-    return HttpResponse(rep)
+    return render(request, 'monApp/list_categories.html', {'cats': cats})
 
 def liste_statuts(request):
     stats = Statut.objects.all()
-    rep = "<ul>"
-    for stat in stats:
-        rep += f"<li><h2>{stat.libelle or "Untitled"}<h2>"
-        rep += f"<ul><li>Identifiant: {stat.idStatut}</li></ul></li>"
-    rep += "</ul>"
-    return HttpResponse(rep)
+    return render(request, 'monApp/list_statuts.html', {'stats': stats})
+
+def liste_rayons(request):
+    rays = Rayon.objects.all()
+    return render(request, 'monApp/list_rayons.html', {'rays': rays})

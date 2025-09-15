@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>Mon app DJANGO</title>
+</head>
+    <body>
+        <h1>Statuts</h1>
+        <p>
+            Les statuts sont :
+            {% for stat in stats %}
+                <li>{{ stat.libelleStatus }}</li>
+            {% endfor %}
+
+            Et pis voilà hein
+        </p>
+    </body>
+</html>

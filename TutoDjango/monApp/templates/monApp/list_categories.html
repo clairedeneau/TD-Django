@@ -1,6 +1,6 @@
 {% extends 'monApp/base.html' %} 
 {% block menu %}
-<h1>Liste des catégories</h1>
+<h1> {{titremenu}} </h1>
 {% endblock %} 
 {% block contenu %}
 <table class="table">
@@ -12,7 +12,7 @@
     {% for cat in cats %}
     <tr>
       <td>{{ cat.idCat }}</td>
-      <td>{{ cat.nomCat }}</td>
+      <td><a href="{% url 'dtl_cat' cat.idCat %}">{{ cat.nomCat }}</a></td>
     </tr>
     {% endfor %}
   </tbody>

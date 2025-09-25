@@ -1,6 +1,6 @@
 {% extends 'monApp/base.html' %} 
 {% block menu %}
-<h1>Liste des rayons</h1>
+<h1>{{titremenu}}</h1>
 {% endblock %} 
 {% block contenu %}
 <table class="table">
@@ -12,20 +12,9 @@
     {% for stat in stats %}
     <tr>
       <td>{{ stat.idStatus }}</td>
-      <td>{{ stat.libelleStatus }}</td>
+      <td><a href="{% url 'dtl_stat' stat.idStatus %}">{{ stat.libelleStatus }}</a></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
-<p>
-  J'ai 
-  {% if stats|length < 5 %}
-   peu de 
-  {% elif stats|length < 10 %} 
-  quelques 
-  {% else %}
-  beaucoup de 
-  {% endif %} 
-  statuts préférés.
-</p>
 {% endblock %}

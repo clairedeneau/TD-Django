@@ -2,7 +2,8 @@ from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.generic import  *
-#from monApp.forms import ContactUsForm, ProduitForm
+from monApp.forms import ContactUsForm
+#, ProduitForm
 from monApp.models import *
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
@@ -38,7 +39,7 @@ class HomeView(TemplateView):
         return context
     
 class AboutView(TemplateView):
-    template_name = "monApp/page_home.html"
+    template_name = "monApp/about.html"
     def get_context_data(self, **kwargs):
         context = super(AboutView, self).get_context_data(**kwargs)
         context['titreh1'] = "About us... nothing"
@@ -47,15 +48,31 @@ class AboutView(TemplateView):
     def post(self, request, **kwargs):
         return render(request, self.template_name)
     
-class ContactView(TemplateView):
-    template_name = "monApp/page_home.html"
+class ConfirmView(TemplateView):
+    template_name = "monApp/confirm.html"
     def get_context_data(self, **kwargs):
-        context = super(AboutView, self).get_context_data(**kwargs)
-        context['titreh1'] = "DO NOT CONTACT ME"
+        context = super(ConfirmView, self).get_context_data(**kwargs)
+        context['titreh1'] = "Email envoyé"
         return context
     
     def post(self, request, **kwargs):
         return render(request, self.template_name)
+    
+def ContactView(request):
+    titreh1 = "Contact us !"
+    if request.method=='POST':
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            send_mail(
+            subject=f'Message from {form.cleaned_data["name"] or "anonyme"} via TutoDjango Contact form',
+            message=form.cleaned_data['message'],
+            from_email=form.cleaned_data['email'],
+            recipient_list=['admin@monApp.com'],
+            )
+            return redirect('confirm')
+    else:
+        form = ContactUsForm()
+    return render(request, "monApp/page_home.html",{'titreh1':titreh1, 'form':form})
     
 class ProduitListView(ListView):
     model = Produit

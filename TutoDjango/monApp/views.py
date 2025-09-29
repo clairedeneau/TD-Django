@@ -2,8 +2,7 @@ from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.generic import  *
-from monApp.forms import ContactUsForm
-#, ProduitForm
+from monApp.forms import ContactUsForm, ProduitForm
 from monApp.models import *
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
@@ -196,3 +195,13 @@ class DisconnectView(TemplateView):
     def get(self, request, **kwargs):
         logout(request)
         return render(request, self.template_name)
+    
+def ProduitCreate(request):
+    if request.method == 'POST':
+        form = ProduitForm(request.POST)
+        if form.is_valid():
+            prdt = form.save()
+            return redirect('dtl-prdt', prdt.refProd)
+    else:
+        form = ProduitForm()
+    return render(request, "monApp/create_produit.html", {'form': form})

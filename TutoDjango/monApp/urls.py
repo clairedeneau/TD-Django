@@ -23,4 +23,5 @@ urlpatterns = [
  path('register/', views.RegisterView.as_view(), name='register'),
  path('logout/', views.DisconnectView.as_view(), name='logout'),
  path('confirm/', views.ConfirmView.as_view(), name='confirm'),
+ path("produit/",views.ProduitCreate , name="crt-prdt"),
 ]

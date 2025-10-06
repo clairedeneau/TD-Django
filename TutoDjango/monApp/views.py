@@ -2,12 +2,13 @@ from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.generic import  *
-from monApp.forms import ContactUsForm, ProduitForm
+from monApp.forms import *
 from monApp.models import *
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -196,12 +197,158 @@ class DisconnectView(TemplateView):
         logout(request)
         return render(request, self.template_name)
     
-def ProduitCreate(request):
-    if request.method == 'POST':
-        form = ProduitForm(request.POST)
-        if form.is_valid():
-            prdt = form.save()
-            return redirect('dtl-prdt', prdt.refProd)
-    else:
-        form = ProduitForm()
-    return render(request, "monApp/create_produit.html", {'form': form})
+class ProduitCreateView(CreateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/create.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('dtl_prdt', prdt.refProd)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Créer un nouveau produit"
+        return context
+    
+class ProduitUpdateView(UpdateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/update.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('dtl_prdt', prdt.refProd)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Mettre à jour un produit"
+        return context
+    
+class ProductDeleteView(DeleteView):
+    model = Produit
+    template_name = "monApp/delete.html"
+    success_url = reverse_lazy('lst_prdts')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Supprimer un produit"
+        context["texte"] = f"Êtes-vous sûr de vouloir supprimer le produit '{context['object'].intituleProd}' ?"
+        return context
+    
+class StatutCreateView(CreateView):
+    model = Statut
+    form_class = StatutForm
+    template_name = "monApp/create.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        stat = form.save()
+        return redirect('dtl_stat', stat.idStatus)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Créer un nouveau statut"
+        return context
+    
+class StatutUpdateView(UpdateView):
+    model = Statut
+    form_class = StatutForm
+    template_name = "monApp/update.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        stat = form.save()
+        return redirect('dtl_stat', stat.idStatus)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Mettre à jour un statut"
+        return context
+    
+class StatutDeleteView(DeleteView):
+    model = Statut
+    template_name = "monApp/delete.html"
+    success_url = reverse_lazy('stat_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Supprimer un statut"
+        context["texte"] = f"Êtes-vous sûr de vouloir supprimer le statut '{context['object'].libelleStatus}' ?"
+        return context
+    
+class CategorieCreateView(CreateView):
+    model = Categorie
+    form_class = CategorieForm
+    template_name = "monApp/create.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        cat = form.save()
+        return redirect('dtl_cat', cat.idCat)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Créer une nouvelle catégorie"
+        return context
+    
+class CategorieUpdateView(UpdateView):
+    model = Categorie
+    form_class = CategorieForm
+    template_name = "monApp/update.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        cat = form.save()
+        return redirect('dtl_cat', cat.idCat)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Mettre à jour une catégorie"
+        return context
+    
+class CategorieDeleteView(DeleteView):
+    model = Categorie
+    template_name = "monApp/delete.html"
+    success_url = reverse_lazy('cat_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Supprimer une catégorie"
+        context["texte"] = f"Êtes-vous sûr de vouloir supprimer la catégorie '{context['object'].nomCat}' ?"
+        return context
+    
+class RayonCreateView(CreateView):
+    model = Rayon
+    form_class = RayonForm
+    template_name = "monApp/create.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        rayon = form.save()
+        return redirect('dtl_ray', rayon.idRayon)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Créer un nouveau rayon"
+        return context
+    
+class RayonUpdateView(UpdateView):
+    model = Rayon
+    form_class = RayonForm
+    template_name = "monApp/update.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        rayon = form.save()
+        return redirect('dtl_ray', rayon.idRayon)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Mettre à jour un rayon"
+        return context
+    
+class RayonDeleteView(DeleteView):
+    model = Rayon
+    template_name = "monApp/delete.html"
+    success_url = reverse_lazy('ray_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["titre"] = "Supprimer un rayon"
+        context["texte"] = f"Êtes-vous sûr de vouloir supprimer le rayon '{context['object'].nomRayon}' ?"
+        return context

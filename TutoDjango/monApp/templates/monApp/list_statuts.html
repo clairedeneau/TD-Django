@@ -1,20 +1,25 @@
 {% extends 'monApp/base.html' %} 
 {% block menu %}
-<h1>{{titremenu}}</h1>
+<h1>Liste des statuts</h1>
 {% endblock %} 
 {% block contenu %}
 <table class="table">
   <thead>
     <th>Id</th>
     <th>Nom statut</th>
+    <th>Nombre de produits</th>
   </thead>
   <tbody>
     {% for stat in stats %}
     <tr>
       <td>{{ stat.idStatus }}</td>
       <td><a href="{% url 'dtl_stat' stat.idStatus %}">{{ stat.libelleStatus }}</a></td>
+      <td>{{ stat.nb_produits }} </td> 
+      <td><a href="{% url 'stat_chng' stat.idStatus %}">Modifier</a></td>
+      <td><a href="{% url 'dlt_stat' stat.idStatus %}">Supprimer</a></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+<a href="{% url 'crt_stat' %}">Créer un nouveau statut</a>
 {% endblock %}

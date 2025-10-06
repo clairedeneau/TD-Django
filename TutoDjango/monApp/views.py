@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
+from django.db.models import Count, Prefetch
 
 # Create your views here.
 
@@ -102,8 +103,8 @@ class CatListView(ListView):
     template_name = "monApp/list_categories.html"
     context_object_name = "cats"
 
-    def get_queryset(self) :
-        return Categorie.objects.all()
+    def get_queryset(self):
+        return Categorie.objects.annotate(nb_produits=Count('produits_categorie'))
     
     def get_context_data(self, **kwargs):
         context = super(CatListView, self).get_context_data(**kwargs)
@@ -114,6 +115,9 @@ class CatDetailView(DetailView):
     model = Categorie
     template_name = "monApp/detail_categorie.html"
     context_object_name = "cat"
+
+    def get_queryset(self):
+        return Categorie.objects.annotate(nb_produits=Count('produits_categorie'))
 
     def get_context_data(self, **kwargs):
         context = super(CatDetailView, self).get_context_data(**kwargs)

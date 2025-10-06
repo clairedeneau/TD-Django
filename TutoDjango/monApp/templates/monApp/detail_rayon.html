@@ -1,9 +1,43 @@
-{% extends 'monApp/base.html' %}
-{% block menu %}
-<h1>{{titremenu}}</h1>
-{% endblock %}
-{% block contenu %}
-<h2>{{ ray.nomRayon }}</h2>
-<p>Identifiant du rayon : {{ray.idRayon }}</p>
-<a href="{% url 'ray_list' %}">Retour à la liste des rayons</a>
+{% extends 'monApp/base.html' %} {% block menu %}
+  <h1>{{ titremenu }}</h1>
+{% endblock %} {% block contenu %}
+  <h2>{{ rayon.nomRayon }}</h2>
+  <ul>
+    <li>Référence rayon: {{ rayon.idRayon }}</li>
+    <li>Nom rayon: {{ rayon.nomRayon }}</li>
+  </ul>
+  <a href="{% url 'lst_rayons' %}">Retour à la liste des rayons</a>
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h4>
+        Ce rayon contient <strong>{{ total_nb_produit }}</strong> produit(s) pour un total de
+        <strong>{{ total_rayon|floatformat:2 }} €</strong>
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        {% if prdts_dt %}
+          {% for data in prdts_dt %}
+            <div class="col-sm-3">
+              <div class="card mb-2 text-center">
+                <div class="card-header bg-info text-white">
+                  <h5 class="card-title">{{ data.produit.intituleProd }}</h5>
+                </div>
+                <div class="card-body">
+                  <ul class="list-unstyled">
+                    <li>Prix unitaire : {{ data.prix_unitaire }} €</li>
+                    <li>Quantité : {{ data.qte }}</li>
+                    <li>Total : {{ data.total_produit }} €</li>
+                  </ul>
+                  <a href="{% url 'dtl_prdt' data.produit.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">Aucun produit trouvé pour cette catégorie.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 {% endblock %}

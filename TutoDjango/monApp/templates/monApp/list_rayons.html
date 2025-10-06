@@ -1,20 +1,25 @@
 {% extends 'monApp/base.html' %} 
 {% block menu %}
-<h1>{{titremenu}}</h1>
+<h1>Liste des rayons</h1>
 {% endblock %} 
 {% block contenu %}
 <table class="table">
   <thead>
     <th>Id</th>
     <th>Nom rayon</th>
+    <th>Valeur du rayon</th>
   </thead>
   <tbody>
-    {% for rayon in rayons %}
+    {% for data in ryns_dt  %}
     <tr>
-      <td>{{ ray.idRayon }}</td>
-      <td><a href="{% url 'dtl_ray' ray.idRayon %}">{{ ray.nomRayon }}</td>
+      <td>{{ data.rayon.idRayon }}</td>
+      <td><a href="{% url 'dtl_rayon' data.rayon.idRayon %}">{{ data.rayon.nomRayon }}</a></td>
+      <td>{{ data.total_stock }} €</td>
+      <td><a href="{% url 'rayon_chng' data.rayon.idRayon %}">Modifier</a></td>
+      <td><a href="{% url 'dlt_rayon' data.rayon.idRayon %}">Supprimer</a></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+<a href="{% url 'crt_rayon' %}">Créer un nouveau rayon</a>
 {% endblock %}

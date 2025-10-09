@@ -2,11 +2,7 @@
   <h1>{{ titremenu }}</h1>
 {% endblock %} {% block contenu %}
   <h2>{{ rayon.nomRayon }}</h2>
-  <ul>
-    <li>Référence rayon: {{ rayon.idRayon }}</li>
-    <li>Nom rayon: {{ rayon.nomRayon }}</li>
-  </ul>
-  <a href="{% url 'lst_rayons' %}">Retour à la liste des rayons</a>
+  <a href="{% url 'ray_list' %}">Retour à la liste des rayons</a>
   <div class="card mb-4">
     <div class="card-header bg-primary text-white">
       <h4>

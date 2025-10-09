@@ -26,7 +26,6 @@ urlpatterns = [
  path("produit/",views.ProduitCreateView.as_view(), name="crt-prdt"),
  path("produit/<pk>/update/",views.ProduitUpdateView.as_view(), name="prdt-chng"),
  path("produit/<pk>/delete/",views.ProductDeleteView.as_view(), name="dlt_prdt"),
- path("produit/<pk>/delete/",views.ProductDeleteView.as_view(), name="dlt_prdt"),
  path("statut/", views.StatutCreateView.as_view(), name="crt_stat"),
  path("statut/<pk>/update/", views.StatutUpdateView.as_view(), name="stat_chng"),
  path("statut/<pk>/delete/", views.StatutDeleteView.as_view(), name="dlt_stat"),

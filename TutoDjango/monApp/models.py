@@ -1,7 +1,6 @@
 from datetime import date
 from django.db import models
 
-# Create your models here.
 class Categorie(models.Model):
     idCat = models.AutoField(primary_key=True)
     nomCat = models.CharField(max_length=100)

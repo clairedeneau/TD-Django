@@ -122,6 +122,7 @@ class CatDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CatDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail de la catégorie"
+        context['prdts'] = self.object.produits_categorie.all()
         return context
     
 class StatutListView(ListView):

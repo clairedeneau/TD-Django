@@ -10,24 +10,10 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.db.models import Count, Prefetch
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
-
-def liste_produits(request):
-    prdts = Produit.objects.all()
-    return render(request, 'monApp/list_produits.html', {'prdts': prdts})
-
-def liste_categories(request):
-    cats = Categorie.objects.all()
-    return render(request, 'monApp/list_categories.html', {'cats': cats})
-
-def liste_statuts(request):
-    stats = Statut.objects.all()
-    return render(request, 'monApp/list_statuts.html', {'stats': stats})
-
-def liste_rayons(request):
-    rays = Rayon.objects.all()
-    return render(request, 'monApp/list_rayons.html', {'rays': rays})
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
@@ -80,8 +66,8 @@ class ProduitListView(ListView):
     template_name = "monApp/list_produits.html"
     context_object_name = "prdts"
 
-    def get_queryset(self ) :
-        return Produit.objects.order_by("prixUnitaireProd")
+    def get_queryset(self):
+        return Produit.objects.select_related('categorie').select_related('status')
     
     def get_context_data(self, **kwargs):
         context = super(ProduitListView, self).get_context_data(**kwargs)
@@ -152,9 +138,11 @@ class RayonListView(ListView):
     model = Rayon
     template_name = "monApp/list_rayons.html"
     context_object_name = "rays"
-
-    def get_queryset(self) :
-        return Rayon.objects.all()
+    
+    def get_queryset(self):
+        return Rayon.objects.prefetch_related(
+        Prefetch("contenir_rayon", queryset=Contenir.objects.select_related("produit"))
+        )
     
     def get_context_data(self, **kwargs):
         context = super(RayonListView, self).get_context_data(**kwargs)
@@ -169,6 +157,22 @@ class RayonDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(RayonDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du rayon"
+
+        prdts_dt = []
+        total_rayon = 0
+        total_nb_produit = 0
+        for contenir in self.object.contenir_rayon.all():
+            total_produit = contenir.produit.prixUnitaireProd * contenir.Qte
+            prdts_dt.append({ 'produit': contenir.produit,
+                            'qte': contenir.Qte,
+                            'prix_unitaire': contenir.produit.prixUnitaireProd,
+                            'total_produit': total_produit} )
+            total_rayon += total_produit
+            total_nb_produit += contenir.Qte
+        context['prdts_dt'] = prdts_dt
+        context['total_rayon'] = total_rayon
+        context['total_nb_produit'] = total_nb_produit
+
         return context
     
 class ConnectView(LoginView):
@@ -201,7 +205,8 @@ class DisconnectView(TemplateView):
     def get(self, request, **kwargs):
         logout(request)
         return render(request, self.template_name)
-    
+
+@method_decorator(login_required, name='dispatch')
 class ProduitCreateView(CreateView):
     model = Produit
     form_class=ProduitForm
@@ -216,6 +221,7 @@ class ProduitCreateView(CreateView):
         context["titre"] = "Créer un nouveau produit"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class ProduitUpdateView(UpdateView):
     model = Produit
     form_class=ProduitForm
@@ -230,6 +236,7 @@ class ProduitUpdateView(UpdateView):
         context["titre"] = "Mettre à jour un produit"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class ProductDeleteView(DeleteView):
     model = Produit
     template_name = "monApp/delete.html"
@@ -241,6 +248,7 @@ class ProductDeleteView(DeleteView):
         context["texte"] = f"Êtes-vous sûr de vouloir supprimer le produit '{context['object'].intituleProd}' ?"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class StatutCreateView(CreateView):
     model = Statut
     form_class = StatutForm
@@ -255,6 +263,7 @@ class StatutCreateView(CreateView):
         context["titre"] = "Créer un nouveau statut"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class StatutUpdateView(UpdateView):
     model = Statut
     form_class = StatutForm
@@ -269,6 +278,7 @@ class StatutUpdateView(UpdateView):
         context["titre"] = "Mettre à jour un statut"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class StatutDeleteView(DeleteView):
     model = Statut
     template_name = "monApp/delete.html"
@@ -280,6 +290,7 @@ class StatutDeleteView(DeleteView):
         context["texte"] = f"Êtes-vous sûr de vouloir supprimer le statut '{context['object'].libelleStatus}' ?"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class CategorieCreateView(CreateView):
     model = Categorie
     form_class = CategorieForm
@@ -293,7 +304,8 @@ class CategorieCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context["titre"] = "Créer une nouvelle catégorie"
         return context
-    
+
+@method_decorator(login_required, name='dispatch')
 class CategorieUpdateView(UpdateView):
     model = Categorie
     form_class = CategorieForm
@@ -308,6 +320,7 @@ class CategorieUpdateView(UpdateView):
         context["titre"] = "Mettre à jour une catégorie"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class CategorieDeleteView(DeleteView):
     model = Categorie
     template_name = "monApp/delete.html"
@@ -319,6 +332,7 @@ class CategorieDeleteView(DeleteView):
         context["texte"] = f"Êtes-vous sûr de vouloir supprimer la catégorie '{context['object'].nomCat}' ?"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class RayonCreateView(CreateView):
     model = Rayon
     form_class = RayonForm
@@ -333,6 +347,7 @@ class RayonCreateView(CreateView):
         context["titre"] = "Créer un nouveau rayon"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class RayonUpdateView(UpdateView):
     model = Rayon
     form_class = RayonForm
@@ -347,6 +362,7 @@ class RayonUpdateView(UpdateView):
         context["titre"] = "Mettre à jour un rayon"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class RayonDeleteView(DeleteView):
     model = Rayon
     template_name = "monApp/delete.html"

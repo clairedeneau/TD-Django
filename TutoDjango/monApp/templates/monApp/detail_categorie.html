@@ -1,6 +1,6 @@
 {% extends 'monApp/base.html' %} {% block menu %}
   <h1>{{ titremenu }}</h1>
-{% endblock %} {% block contenu %}
+{% endblock %}
 {% block contenu %}
 <div class="card mb-4">
   <div class="card-header bg-primary text-white">
@@ -19,4 +19,30 @@
     </div>
   </div>
 </div>
+<div class="card mb-4">
+  <div class="card-header bg-primary text-white">
+    <h4>Cette catégorie contient <strong>{{ ctgr.nb_produits }}</strong> produit(s)</h4>
+  </div>
+  <div class="card-body">
+    <div class="row">
+    {% if prdts %}
+      {% for prdt in prdts %}
+      <div class="col-sm-3">
+        <div class="card mb-2 text-center">
+          <div class="card-header bg-info text-white">
+            <h5 class="card-title">{{ prdt.intituleProd }}</h5>
+          </div>
+          <div class="card-body">
+            <a href="{% url 'dtl_prdt' prdt.refProd %}" class="btn btn-primary mt-2">Détails</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted">Aucun produit trouvé pour cette catégorie.</p>
+    {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}
+

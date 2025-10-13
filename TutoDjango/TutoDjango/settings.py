@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+LOGIN_URL = '/monApp/login/'
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'monApp',
     'debug_toolbar',
     'bootstrap5',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

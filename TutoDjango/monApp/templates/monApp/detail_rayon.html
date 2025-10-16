@@ -31,9 +31,10 @@
             </div>
           {% endfor %}
         {% else %}
-          <p class="text-muted">Aucun produit trouvé pour cette catégorie.</p>
+          <p class="text-muted">Aucun produit trouvé pour ce rayon.</p>
         {% endif %}
       </div>
     </div>
   </div>
+  <a href="{% url 'cntnr-crt' rayon.idRayon %}" class="btn btn-success">Ajouter un produit </a>
 {% endblock %}

@@ -18,7 +18,7 @@ urlpatterns = [
  path("produit/<pk>/",views.ProduitDetailView.as_view(), name="dtl_prdt"),
  path("categorie/<pk>/",views.CatDetailView.as_view(), name="dtl_cat"),
  path("statut/<pk>/",views.StatutDetailView.as_view(), name="dtl_stat"),
- path("rayon/<pk>/",views.RayonDetailView.as_view(), name="dtl_ray"),
+ path("rayon/<pk>/",views.RayonDetailView.as_view(), name="dtl_rayon"),
  path('login/', views.ConnectView.as_view(), name='login'),
  path('register/', views.RegisterView.as_view(), name='register'),
  path('logout/', views.DisconnectView.as_view(), name='logout'),
@@ -35,4 +35,7 @@ urlpatterns = [
  path("rayon/", views.RayonCreateView.as_view(), name="crt_rayon"),
  path("rayon/<pk>/update/", views.RayonUpdateView.as_view(), name="rayon_chng"),
  path("rayon/<pk>/delete/", views.RayonDeleteView.as_view(), name="dlt_rayon"),
+ path('rayon/<pk>/cntnr', views.ContenirCreateView.as_view(), name='cntnr-crt'),
+ path('rayon/<pk>/cntnr', views.ContenirDeleteView.as_view(), name='dlt-crt'),
+ path('rayon/<pk>/cntnr', views.ContenirUpdateView.as_view(), name='updt-crt'),
 ]
